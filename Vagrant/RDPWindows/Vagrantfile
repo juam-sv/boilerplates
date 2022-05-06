@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "peru/windows-10-enterprise-x64-eval"
+  config.vm.hostname = "RDPWindows"
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.default_prefix = "RDPWindows"
+    libvirt.cpus = 2
+    libvirt.memory = 3072
+  end
+end

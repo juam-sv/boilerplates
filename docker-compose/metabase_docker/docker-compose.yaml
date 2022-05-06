@@ -1,0 +1,24 @@
+version: "3.7"
+
+# volumes:
+#   mariadb_data:
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    # volumes:
+    #   - mariadb_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=super@senh4
+      - MYSQL_PASSWORD=super@senh4
+      - MYSQL_DATABASE=padrao
+      - MYSQL_USER=padrao
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "email@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "super@senh4"
+    # ports:
+    #   - "16543:80"

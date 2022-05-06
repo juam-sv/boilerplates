@@ -1,0 +1,7 @@
+<network>
+  <name>Whonix-Internal</name>
+  <uuid>ad9f4fc0-c6ba-4724-9a4f-829bb28d78a2</uuid>
+  <bridge name='virbr4' stp='on' delay='0'/>
+  <mac address='52:54:00:bc:65:57'/>
+</network>
+

@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|    
+    (1..1).each do |i|                            #change the number for que nº of VMs you want. ex: (1..5)
+        config.vm.define "docker-#{i}" do |docker|      #define the vm name 
+            docker.vm.box = "generic/ubuntu2004"        #VM Image used
+            docker.vm.hostname = "docker-#{i}"            #set the vm hostname            
+            docker.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
+                libvirt.cpus = 2                        # number of vCPUs
+                libvirt.memory = 2048                   #ram memory
+                libvirt.default_prefix = "docker_"
+                libvirt.nested = true
+            end
+            docker.vm.provision "shell", path: "install_docker.sh"
+        end
+    end
+end

@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+    config.vm.define "tower" do |centos|
+        centos.vm.hostname = "centos"
+        centos.vm.box = "centos/stream8"
+        centos.vm.box_check_update = false
+        # centos.vm.synced_folder ".", "/vagrant_data", disabled: false
+        centos.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
+            libvirt.cpus = 4                        # number of vCPUs
+            libvirt.memory = 4096                   #ram memory
+            libvirt.default_prefix = "ansible"
+            libvirt.nested = true
+        end
+        # centos.vm.provision "shell", path: "install.sh"
+    end
+    config.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip #get your ssh pub key
+        s.inline = <<-SHELL
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+    end
+end
