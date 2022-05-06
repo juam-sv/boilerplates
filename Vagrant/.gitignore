@@ -4,6 +4,5 @@
 .directory
 /.directory
 *.gz
-*.tar.gz
 *.zip
 *.sql
