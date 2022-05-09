@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+
+  - name: Adiciona o usuario vagrant no grupo docker
+    user:
+      name: vagrant
+      group: docker
+
+  - name: Copiando o diretorio portainer
+    synchronize:
+      src: files/portainer
+      dest: /home/vagrant
+
+  - name: Download do Docker Compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.25.5/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
+
+  - name: Deploy do Portainer via Docker Compose
+    shell: /usr/local/bin/docker-compose up -d
+    args:
+      chdir: /home/vagrant/portainer
+  
+  - name: Reinicia a VM
+    command: reboot
