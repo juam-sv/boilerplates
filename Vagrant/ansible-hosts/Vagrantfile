@@ -3,96 +3,34 @@
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
+vms = {
+    'ubuntu' => {'memory' => '1024', 'cpus' => 1, 'ip' => '11', 'box' => 'generic/ubuntu2004'},
+    'debian' => {'memory' => '1024', 'cpus' => 1, 'ip' => '12', 'box' => 'debian/bullseye64'},
+    'rocky' => {'memory' => '1024', 'cpus' => 1, 'ip' => '13', 'box' => 'rockylinux/8'}
+}
+
 Vagrant.configure("2") do |config|
-    #Ubuntu 20.04
-    config.vm.define "ubuntu" do |ubuntu|
-        ubuntu.vm.hostname = "ubuntu"
-        ubuntu.vm.box = "generic/ubuntu2004"
-        ubuntu.vm.box_check_update = false
-        ubuntu.vm.synced_folder ".", "/vagrant_data", disabled: true
-        ubuntu.vm.network :private_network,         
-            :libvirt__network_name => "default",    
-            :libvirt__always_destroy => false,
-            :ip => "192.168.122.10"
-        #update & install packages
-        ubuntu.vm.provision "shell", inline: <<-SHELL
-            apt update
-            apt install unzip python -y
-        SHELL
-
-        #set libvirt vm parameters
-        ubuntu.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
-            libvirt.cpus = 1                        # number of vCPUs
-            libvirt.memory = 1024                   #ram memory
-            libvirt.default_prefix = "ansible_hosts_"
-            libvirt.nested = true
-        end
-        
-        #inser my private ssh key to autorized keys inside VM.
-        ubuntu.vm.provision "shell" do |s|
-            ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip #get your ssh pub key
-            s.inline = <<-SHELL
-            echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
-            SHELL
-        end
-    end
-
-    #rockylinux/8
-    config.vm.define "rocky" do |rocky|
-        rocky.vm.hostname = "rocky"
-        rocky.vm.box = "rockylinux/8"
-        rocky.vm.box_check_update = false
-        rocky.vm.synced_folder ".", "/vagrant_data", disabled: true
-        rocky.vm.network :private_network,         
-            :libvirt__network_name => "default",    
-            :libvirt__always_destroy => false,
-            :ip => "192.168.122.11"
-        #set libvirt vm parameters
-        rocky.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
-            libvirt.cpus = 1                        # number of vCPUs
-            libvirt.memory = 1024                   #ram memory
-            libvirt.default_prefix = "ansible_hosts_"
-            libvirt.nested = true
-        end
-        
-        #inser my private ssh key to autorized keys inside VM.
-        rocky.vm.provision "shell" do |s|
-            ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip #get your ssh pub key
-            s.inline = <<-SHELL
-            echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
-            SHELL
-        end
-    end
-
-    #debian/bullseye64
-    config.vm.define "debian" do |debian|
-        debian.vm.hostname = "debian"
-        debian.vm.box = "debian/bullseye64"
-        debian.vm.box_check_update = false
-        debian.vm.synced_folder ".", "/vagrant_data", disabled: true
-        debian.vm.network :private_network,         
-            :libvirt__network_name => "default",    
-            :libvirt__always_destroy => false,
-            :ip => "192.168.122.12"
-        #set libvirt vm parameters
-        debian.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
-            libvirt.cpus = 1                        # number of vCPUs
-            libvirt.memory = 1024                   #ram memory
-            libvirt.default_prefix = "ansible_hosts_"
-            libvirt.nested = true
-        end
-        
-        debian.vm.provision "shell", inline: <<-SHELL
-            apt update
-            apt install unzip python -y
-        SHELL
-
-        #inser my private ssh key to autorized keys inside VM.
-        debian.vm.provision "shell" do |s|
-            ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip #get your ssh pub key
-            s.inline = <<-SHELL
-            echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
-            SHELL
+    vms.each do |name, conf|
+        config.vm.define "#{name}" do |k|
+            k.vm.box = "#{conf['box']}"
+            k.vm.hostname = "#{name}"
+            k.vm.synced_folder ".", "/vagrant_data", disabled: true
+            k.vm.network :private_network,         
+                :libvirt__network_name => "default",    
+                :libvirt__always_destroy => false,
+                :ip => "192.168.122.#{conf['ip']}"
+            k.vm.provider :libvirt do |libvirt|    
+                libvirt.cpus = conf['cpus']                       
+                libvirt.memory = conf['memory']                   
+                libvirt.default_prefix = "ansible_hosts_"
+                libvirt.nested = true
+            end
+            k.vm.provision "shell" do |s|
+                ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip 
+                s.inline = <<-SHELL
+                echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+                SHELL
+            end
         end
     end
 end
