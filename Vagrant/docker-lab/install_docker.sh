@@ -19,5 +19,5 @@ apt install -y docker-compose
 
 sudo usermod --append --groups docker vagrant
 # Set up sudo
-echo "==> Giving ${SSH_USER} sudo powers"
-echo "${SSH_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/vagrant
+# echo "==> Giving ${SSH_USER} sudo powers"
+# echo "${SSH_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/vagrant

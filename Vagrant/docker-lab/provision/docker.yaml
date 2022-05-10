@@ -5,6 +5,24 @@
   become_method: sudo
   tasks:
 
+  - name: Update repositories cache
+    apt:
+      update_cache: yes
+
+  - name: Update all packages to their latest version
+    apt:
+      name: "*"
+      state: latest
+
+  # - name: Upgrade the OS (apt-get dist-upgrade)
+  #   apt:
+  #     upgrade: dist
+
+  - name: Install Docker Package
+    package:
+      name: docker.io
+      state: present
+
   - name: Adiciona o usuario vagrant no grupo docker
     user:
       name: vagrant
@@ -21,10 +39,10 @@
       dest: /usr/local/bin/docker-compose
       mode: 0755
 
-  - name: Deploy do Portainer via Docker Compose
-    shell: /usr/local/bin/docker-compose up -d
-    args:
-      chdir: /home/vagrant/portainer
+  # - name: Deploy do Portainer via Docker Compose
+  #   shell: /usr/local/bin/docker-compose up -d
+  #   args:
+  #     chdir: /home/vagrant/portainer
   
-  - name: Reinicia a VM
-    command: reboot
+  # - name: Reinicia a VM
+  #   command: reboot

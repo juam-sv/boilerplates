@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.5'
 
 services:
   agent:
@@ -32,8 +32,8 @@ services:
 
 networks:
   agent_network:
-    driver: overlay
-    attachable: true
+    # driver: overlay
+    # attachable: true
 
 volumes:
   portainer_data:
