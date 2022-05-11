@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Garantindo /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - 192.168.1.1 dominio.com.br
+
+    - name: Install qemu agent
+      package:
+        name: qemu-guest-agent
+        state: present  
+
+    - name: Install IPA client package
+      package:
+        name: freeipa-client
+        state: present  
+
+    - name: Deploy do Wordpress via Docker Compose
+      shell: ipa-client-install --server 
+      args:
+        chdir: /home/suporte/wordpress-deploy

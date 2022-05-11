@@ -1,0 +1,20 @@
+---
+- name: Playbook to configure IPA clients with username/password
+  hosts: all
+  become: true
+
+  tasks:
+  
+    - name: Install IPA client package on Debian
+      package:
+        name: freeipa-client
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install IPA client package on RedHat
+      package:
+        name: ipa-client
+        state: present
+      when: ansible_os_family == "RedHat"
+        
+

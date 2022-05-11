@@ -3,19 +3,21 @@
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
-Vagrant.configure("2") do |config|    
-    (1..1).each do |i|                            #change the number for que nº of VMs you want. ex: (1..5)
-        config.vm.define "node-#{i}" do |docker|      #define the vm name 
-            docker.vm.box = "generic/ubuntu2004"        #VM Image used
-            docker.vm.hostname = "node-#{i}"            #set the vm hostname            
-            docker.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
-                libvirt.cpus = 1                        # number of vCPUs
-                libvirt.memory = 1024                   #ram memory
+Vagrant.configure("2") do |config|
+    (1..1).each do |i|
+        config.vm.define "node-#{i}" do |docker|
+            docker.vm.box = "generic/ubuntu2004"
+            docker.vm.hostname = "node-#{i}"
+            docker.vm.provider :libvirt do |libvirt|
+                libvirt.cpus = 1
+                libvirt.memory = 1024
                 libvirt.default_prefix = "swarm_"
                 libvirt.nested = true
             end
             docker.vm.provision :ansible do |ansible|
-                ansible.playbook = "./provision/docker.yaml"
+                # ansible.playbook = "./provision/docker.yaml"
+                ansible.playbook = "./provision/install_docker.yaml"
+                ansible.playbook = "./provision/deploy-portainer.yaml"
                 ansible.compatibility_mode = '2.0'
             end
             # docker.vm.provision "shell", path: "install_docker.sh"

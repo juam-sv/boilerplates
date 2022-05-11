@@ -1,0 +1,9 @@
+[ansible_hosts:vars]
+ansible_user='vagrant'
+ansible_become=yes
+
+[ansible_hosts]
+192.168.122.11
+192.168.122.13
+192.168.122.12
+
