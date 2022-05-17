@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+    config.vm.define "foreman" do |ubuntu|
+        ubuntu.vm.hostname = "foreman"
+        ubuntu.vm.box = "generic/ubuntu2004"
+        ubuntu.vm.box_check_update = false
+        ubuntu.vm.synced_folder ".", "/vagrant_data", disabled: true
+        ubuntu.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
+            libvirt.cpus = 2                       # number of vCPUs
+            libvirt.memory = 2048                   #ram memory
+            libvirt.default_prefix = "the"    #prefix for ansible variables
+        end
+        ubuntu.vm.provision "shell", path: "install.sh"
+    end
+    config.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip #get your ssh pub key
+        s.inline = <<-SHELL
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+    end
+end
