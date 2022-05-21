@@ -15,7 +15,7 @@ sudo yum -y install https://yum.theforeman.org/releases/3.2/el7/x86_64/foreman-r
 echo "Update hosts file"
 myip=$(ip -4 -o addr show eth0 | awk '{print $4}' | cut -d "/" -f 1)
 echo "$myip foreman.lab.local" >> /etc/hosts
-hostnamectl set-hostname foreman.lab.local
+sudo hostnamectl set-hostname  $(hostname).seasolutions.com.br
 
 echo "Testing hostname/ip"
 ping -c 4 $(hostname -f)
