@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+    config.vm.define stack do |stack|
+        stack.vm.box = "generic/ubuntu2004"
+        stack.vm.hostname = "devstack"
+        stack.vm.provider :libvirt do |libvirt|
+            libvirt.cpus = 4
+            libvirt.memory = 4096
+            libvirt.default_prefix = "dev"
+            libvirt.nested = true
+        end
+        stack.vm.provision :ansible do |ansible|
+            ansible.playbook = "./provision/deploy-portainer.yaml"
+            ansible.compatibility_mode = '2.0'
+        end
+    end
+end

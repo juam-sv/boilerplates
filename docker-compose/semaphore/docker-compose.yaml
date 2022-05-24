@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+
+  semaphore:
+    ports:
+      - 3000:3000
+    image: ansiblesemaphore/semaphore:latest
+    env_file:
+      - env/semaphore.env
+    volumes:
+      - semaphore_data:/home/semaphore/
+    configs:
+    - source: semaphore_config
+      target: /etc/semaphore/config.json 
+
+  mariadb:
+    image: mariadb:10.3
+    restart: always
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: bananadafrita
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+
+configs:
+  semaphore_config:
+    file: ./config.json
+
+volumes:
+  semaphore_data:
+  data:

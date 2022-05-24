@@ -52,7 +52,7 @@
 
   - name: Reboot 
     reboot:
-      connect_timeout: 30
+      # connect_timeout: 1
       boot_time_command: uptime | cut -d ' ' -f 5
       test_command: "docker ls"
 
