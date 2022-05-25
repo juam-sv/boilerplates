@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+# Vagrant Settings
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/stretch64"
+  config.vm.box_check_update = false
+  config.vm.network :private_network,           
+    :libvirt__always_destroy => false,
+    :ip => "192.168.122.10"
+  config.disksize.size = "12GB" # You need install plugin vagrant-disksize on vagrant. For this, do vagrant plugin install vagrant-disksize.
+
+  config.vm.provision "shell", inline: <<-SHELL
+    apt update && apt upgrade -y
+    apt install screen net-tools -y
+  SHELL
+
+  #Virtualbox Settings
+  config.vm.provider :libvirt do |libvirt|    
+    libvirt.cpus = 1
+    libvirt.memory = 1024              
+    libvirt.default_prefix = "ansible_lab"
+  end
+end
