@@ -4,18 +4,14 @@
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
-    config.vm.define stack do |stack|
+    config.vm.define "stack" do |stack|
         stack.vm.box = "generic/ubuntu2004"
         stack.vm.hostname = "devstack"
         stack.vm.provider :libvirt do |libvirt|
-            libvirt.cpus = 4
+            libvirt.cpus = 2
             libvirt.memory = 4096
             libvirt.default_prefix = "dev"
-            libvirt.nested = true
         end
-        stack.vm.provision :ansible do |ansible|
-            ansible.playbook = "./provision/deploy-portainer.yaml"
-            ansible.compatibility_mode = '2.0'
-        end
+        # stack.vm.provision "shell", path: "install_stack.sh"
     end
 end
