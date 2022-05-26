@@ -8,10 +8,11 @@ Vagrant.configure("2") do |config|
         stack.vm.box = "generic/ubuntu2004"
         stack.vm.hostname = "devstack"
         stack.vm.provider :libvirt do |libvirt|
-            libvirt.cpus = 2
+            libvirt.cpus = 4
             libvirt.memory = 4096
             libvirt.default_prefix = "dev"
         end
+    config.disksize.size = "50GB"
         # stack.vm.provision "shell", path: "install_stack.sh"
     end
 end
