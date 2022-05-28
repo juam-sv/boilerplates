@@ -5,11 +5,14 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
     config.vm.define "stack" do |stack|
-        stack.vm.box = "generic/ubuntu2004"
-        stack.vm.hostname = "devstack"
+        stack.vm.box = "generic/centos8s"
+        stack.vm.hostname = "openstack-controller"
+        # stack.vm.network :private_network,         
+        #     :libvirt__network_name => "default",    
+        #     :libvirt__always_destroy => false
         stack.vm.provider :libvirt do |libvirt|
             libvirt.cpus = 4
-            libvirt.memory = 4096
+            libvirt.memory = 8192
             libvirt.default_prefix = "dev"
         end
     config.disksize.size = "50GB"
