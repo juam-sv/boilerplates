@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+    config.vm.define "stack" do |stack|
+        stack.vm.box = "generic/centos8s"
+        stack.vm.hostname = "packstack.lab.local"
+        config.vm.disk :disk, size: "80GB", primary: true
+        stack.vm.provider :libvirt do |libvirt|
+            libvirt.cpus = 4
+            libvirt.memory = 8192
+            libvirt.default_prefix = "pack"
+        end
+        stack.vm.provision :ansible do |ansible|
+            # ansible.playbook = "./provision/packstack.yaml"
+            ansible.playbook = "./provision/teste.yaml"
+            # ansible.compatibility_mode = '2.0'
+        end
+        # stack.vm.provision "shell", path: "packstack.sh"
+    end
+end
