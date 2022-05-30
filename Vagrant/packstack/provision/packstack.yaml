@@ -1,46 +1,74 @@
-- name: check packages for updates
-  shell: yum list updates | awk 'f;/Updated Packages/{f=1;}' | awk '{ print $1 }'
-  changed_when: updates.stdout_lines | length > 0
-  args:
-    warn: false
-  register: updates
+---
+- name: PackStack
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
 
-- name: display count
-  debug:
-    msg: "Found {{ updates.stdout_lines | length }} packages to be updated:\n\n{{ updates.stdout }}"
-
-- when: updates.stdout_lines | length > 0
-  block:
-    - name: install updates using yum
-      yum:
+    - name: Upgrade all packages
+      dnf:
         name: "*"
         state: latest
+    
+    - name: Enable Powertools
+      command:
+        cmd: dnf config-manager --enable powertools
+        warn: false
 
-    - name: install yum-utils
-      package:
-        name: yum-utils
+    - name: Disable epel
+      command:
+        cmd: dnf config-manager --disable epel
+        warn: false
 
-    - name: check if reboot is required
-      shell: needs-restarting -r
-      failed_when: false
-      register: reboot_required
-      changed_when: false
+    - name: Uninstall Hiera but keep its dependencies
+      dnf:
+        name: hiera
+        state: absent
+        autoremove: yes
 
-- when: updates.stdout_lines | length > 0 and reboot_required.rc != 0
-  block:
-    - name: reboot the server if required
-      shell: sleep 3; reboot
-      ignore_errors: true
-      changed_when: false
-      async: 1
-      poll: 0
+    - name: Install all the packages
+      dnf:
+        name: '{{ item }}'
+        state: present
+        update_cache: True
+      with_items:
+        - centos-release-openstack-yoga
+        - dhclient
+        - openstack-packstack
+        - network-scripts
 
-    - name: wait for server to come back after reboot
-      wait_for_connection:
-        timeout: 600
-        delay: 20
-      register: reboot_result
+    - name: Disable service firewalld 
+      ansible.builtin.systemd:
+        name: firewalld
+        enabled: no
+        state: stopped
 
-    - name: reboot time
-      debug:
-        msg: "The system rebooted in {{ reboot_result.elapsed }} seconds."
+    - name: Disable service NetworkManager
+      ansible.builtin.systemd:
+        name: NetworkManager
+        enabled: no
+
+    - name: Enable service network 
+      ansible.builtin.systemd:
+        name: network
+        # state: restarted
+        enabled: yes
+    #     masked: no
+
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
+    - name: Reboot host and wait for it to restart
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: whoami
+
+    - name: Install PackStack
+      command:
+        cmd: packstack --allinone
+        warn: false

@@ -14,10 +14,9 @@ Vagrant.configure("2") do |config|
             libvirt.default_prefix = "pack"
         end
         stack.vm.provision :ansible do |ansible|
-            # ansible.playbook = "./provision/packstack.yaml"
-            ansible.playbook = "./provision/teste.yaml"
+            ansible.playbook = "./provision/packstack.yaml"
             # ansible.compatibility_mode = '2.0'
+            ansible.verbose = "vvv"
         end
-        # stack.vm.provision "shell", path: "packstack.sh"
     end
 end
