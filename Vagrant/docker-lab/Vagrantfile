@@ -9,18 +9,15 @@ Vagrant.configure("2") do |config|
             docker.vm.box = "generic/ubuntu2004"
             docker.vm.hostname = "node-#{i}"
             docker.vm.provider :libvirt do |libvirt|
-                libvirt.cpus = 1
-                libvirt.memory = 1024
-                libvirt.default_prefix = "swarm_"
+                libvirt.cpus = 2
+                libvirt.memory = 2048
+                libvirt.default_prefix = "docker_"
                 libvirt.nested = true
             end
             docker.vm.provision :ansible do |ansible|
-                # ansible.playbook = "./provision/docker.yaml"
-                ansible.playbook = "./provision/install_docker.yaml"
-                # ansible.playbook = "./provision/deploy-portainer.yaml"
-                ansible.compatibility_mode = '2.0'
+                ansible.playbook = "./provision/main.yaml"
             end
-            # docker.vm.provision "shell", path: "install_docker.sh"
         end
     end
 end
+
