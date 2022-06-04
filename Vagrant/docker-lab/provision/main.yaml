@@ -1,0 +1,4 @@
+# main.yml
+---
+- import_playbook: install_docker.yaml
+- import_playbook: deploy-portainer.yaml
