@@ -1,0 +1,2 @@
+# Upload the public key pair
+config.vm.provision "file", source "~/.ssh/id_ed25519.pub", destination: "~/.ssh/autorized_keys"
