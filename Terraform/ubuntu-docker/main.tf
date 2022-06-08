@@ -10,16 +10,16 @@ provider "libvirt" {
     uri = "qemu:///system"
 }
 
-resource "libvirt_volume" "centos7-qcow2" {
-    name = "centos7-qcow2"
+resource "libvirt_volume" "ubuntu2004-qcow2" {
+    name = "node-1"
     pool = "default"
-    source = "/var/lib/libvirt/images/CentOS-7-x86_64-GenericCloud.qcow2c"
+    source = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
     format = "qcow2"
     # capacity = "10"
     # provider = "libvirt"
 }
 
-resource "libvirt_domain" "terraform_test" {
+resource "libvirt_domain" "swarm-lab" {
     name = "swarm-node-1"
     memory = 1024
     vcpu = 2
@@ -27,7 +27,7 @@ resource "libvirt_domain" "terraform_test" {
     # autostart = true
 
     disk {
-        volume_id = libvirt_volume.centos7-qcow2.id
+        volume_id = libvirt_volume.ubuntu2004-qcow2.id
     }
 
     cloudinit = libvirt_cloudinit_disk.commoninit.id
@@ -42,7 +42,7 @@ resource "libvirt_domain" "terraform_test" {
 
 output "IPS" {
     # value = libvirt_domain.terraform_test.ip_addresses
-    value = libvirt_domain.terraform_test.*.network_interface.0.addresses
+    value = libvirt_domain.swarm-lab.*.network_interface.0.addresses
 }
 
 resource "libvirt_cloudinit_disk" "commoninit" {
