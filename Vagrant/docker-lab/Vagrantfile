@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
                 libvirt.default_prefix = "docker_"
                 libvirt.nested = true
             end
-            docker.vm.provision "file", source: "~/.ssh/id_ed25519.pub", destination: "~/.ssh/id_rsa.pub"
+            docker.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
             docker.vm.provision :ansible do |ansible|
                 ansible.playbook = "./provision/main.yaml"
             end
