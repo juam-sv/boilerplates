@@ -4,7 +4,7 @@
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
-    (1..1).each do |i|
+    (1..2).each do |i|
         config.vm.define "node-#{i}" do |docker|
             docker.vm.box = "generic/ubuntu2004"
             docker.vm.hostname = "node-#{i}"
