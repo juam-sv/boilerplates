@@ -1,0 +1,56 @@
+version: '3.5'
+
+services:
+  teleport-server:
+    image: quay.io/gravitational/teleport:9.3.6
+    ports:
+    - 9003:3023
+    - 9004:3024
+    - 9005:3025
+    - 9006:3080
+    volumes:
+    - config:/etc/teleport
+    - data:/var/lib/teleport
+    - certs:/mnt/shared/certs
+    configs:
+    - source: teleport_server_config
+      target: /etc/teleport/teleport.yaml
+    healthcheck:
+      test: tctl status
+      interval: 2s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
+
+  node-one:
+    image: quay.io/gravitational/teleport:7
+    configs:
+    - source: teleport_client_config
+      target: /etc/teleport/teleport.yaml
+    volumes:
+      - certs:/mnt/shared/certs
+    depends_on:
+    - teleport-server
+        # condition: service_healthy
+
+  node-two:
+    image: quay.io/gravitational/teleport:7
+    configs:
+    - source: teleport_client_config
+      target: /etc/teleport/teleport.yaml
+    volumes:
+      - certs:/mnt/shared/certs
+    depends_on:
+    - teleport-server
+        # condition: service_healthy
+
+configs:
+  teleport_server_config:
+    file: ./teleport.yaml
+  teleport_client_config:
+    file: ./teleport-client.yaml
+
+volumes:
+  config: 
+  data: 
+  certs: 
