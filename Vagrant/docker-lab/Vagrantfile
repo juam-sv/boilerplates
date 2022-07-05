@@ -4,13 +4,13 @@
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
-    (1..2).each do |i|
+    (1..1).each do |i|
         config.vm.define "node-#{i}" do |docker|
             docker.vm.box = "generic/ubuntu2004"
             docker.vm.hostname = "node-#{i}"
             docker.vm.provider :libvirt do |libvirt|
-                libvirt.cpus = 2
-                libvirt.memory = 1024
+                libvirt.cpus = 4
+                libvirt.memory = 4096
                 libvirt.default_prefix = "docker_"
                 libvirt.nested = true
             end
