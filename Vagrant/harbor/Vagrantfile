@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+vms = {
+    'harbor' => {'memory' => '2048', 'cpus' => 4, 'ip' => '11', 'box' => 'generic/ubuntu2004'},
+
+}
+
+Vagrant.configure("2") do |config|
+    vms.each do |name, conf|
+        config.vm.define "#{name}" do |k|
+            k.vm.box = "#{conf['box']}"
+            k.vm.hostname = "#{name}"
+            k.vm.synced_folder ".", "/vagrant_data", disabled: true
+            k.vm.box_check_update = false
+            k.vm.disk :disk, size: "80GB", primary: true
+            k.vm.provider :libvirt do |libvirt|    
+                libvirt.cpus = conf['cpus']                       
+                libvirt.memory = conf['memory']                   
+                libvirt.default_prefix = "registry"
+                libvirt.nested = true
+            end
+            k.vm.provision :ansible do |ansible|
+                ansible.playbook = "./provision/playbook.yaml"
+                ansible.verbose = "vvv"
+            end
+            # Upload the public key pair
+            k.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+        end
+    end
+end
