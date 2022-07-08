@@ -1,3 +1,4 @@
 .vagrant
 .directory
 *.sql
+*.rpm

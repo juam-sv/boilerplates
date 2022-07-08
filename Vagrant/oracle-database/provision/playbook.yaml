@@ -1,3 +1,33 @@
 ---
+---
+- name: Atualização e Reboot RHEL & Debian derivados Linux distros
+  hosts: all
+  vars:
+    reboot_connect_timeout: 5
+    reboot_post_reboot_delay: 15
+    reboot_timeout: 600
+  tasks:
 
+    - name: Update all packages
+      dnf:
+        name: "*"
+        update_cache: yes
+        state: latest
+    
+    - name: Oracle Database Pre-install 21C (DNF)
+      dnf:
+        name: oracle-database-preinstall-21c
+        state: present
+        update_cache: yes
+      when: ansible_distribution in ["OracleLinux", "Red Hat Enterprise Linux", "CentOS"]
+
+
+    - name: Reboot host and wait for it to restart
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: whoami
 ...
