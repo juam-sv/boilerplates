@@ -4,36 +4,36 @@
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 vms = {
-    'ubuntu' => {'memory' => '512', 'cpus' => 1, 'ip' => '11', 'box' => 'generic/ubuntu2004'},
-    'debian' => {'memory' => '512', 'cpus' => 1, 'ip' => '12', 'box' => 'debian/bullseye64'},
-    'rocky' => {'memory' => '512', 'cpus' => 1, 'ip' => '13', 'box' => 'rockylinux/8'}
+    "master" => {'memory' => '2048', 'cpus' => 2, 'ip' => '10', 'box' => 'generic/ubuntu2004'},
+    "node01" => {'memory' => '1024', 'cpus' => 2, 'ip' => '11', 'box' => 'generic/ubuntu2004'},
+    "node02" => {'memory' => '1024', 'cpus' => 2, 'ip' => '12', 'box' => 'centos/8'},
+    "registry" => {'memory' => '1024', 'cpus' =>2, 'ip' => '13', 'box' => 'generic/ubuntu2004'}
 }
 
 Vagrant.configure("2") do |config|
     vms.each do |name, conf|
-        config.vm.define "#{name}" do |k|
-            k.vm.box = "#{conf['box']}"
-            k.vm.hostname = "#{name}"
-            k.vm.synced_folder ".", "/vagrant_data", disabled: true
-            k.vm.box_check_update = false
-            k.vm.disk :disk, size: "80GB", primary: true
-            k.vm.network :private_network,         
-                :libvirt__network_name => "default",    
+        config.vm.define "#{name}" do |monitoring|
+            monitoring.vm.box = "#{conf['box']}"
+            monitoring.vm.hostname = "#{name}.monitoring.lab"
+            monitoring.vm.synced_folder ".", "/vagrant_data", disabled: true
+            monitoring.vm.box_check_update = false
+            monitoring.vm.disk :disk, size: "50GB", primary: true
+            monitoring.vm.network :private_network,         
+                :libvirt__network_name => "monitoring",    
                 :libvirt__always_destroy => false,
-                :ip => "192.168.122.#{conf['ip']}"
-            k.vm.provider :libvirt do |libvirt|    
+                :ip => "10.0.0.#{conf['ip']}"
+            monitoring.vm.provider :libvirt do |libvirt|    
                 libvirt.cpus = conf['cpus']                       
                 libvirt.memory = conf['memory']                   
-                libvirt.default_prefix = "ansible_lab_"
-                libvirt.nested = true
+                libvirt.default_prefix = "monitoring_"
             end
-            k.vm.provision :ansible do |ansible|
-                ansible.playbook = "./provision/playbook.yaml"
-                # ansible.compatibility_mode = '2.0'
+            monitoring.vm.provision :ansible do |ansible|
+                ansible.playbook = "./provision/main.yaml"
                 ansible.verbose = "vvv"
             end
             # Upload the public key pair
-            k.vm.provision "file", source: "~/.ssh/id_ed25519.pub", destination: "~/.ssh/id_rsa.pub"
+            monitoring.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+            monitoring.vm.provision "shell", inline: "hostnamectl set-hostname #{name}.monitoring.lab"
         end
     end
 end

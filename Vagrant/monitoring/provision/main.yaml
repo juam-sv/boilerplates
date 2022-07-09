@@ -1,0 +1,3 @@
+# main.yml
+---
+- import_playbook: install_docker.yaml

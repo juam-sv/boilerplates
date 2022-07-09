@@ -1,0 +1,75 @@
+---
+- hosts: all
+  
+  become: true
+  tasks:
+
+  - name: Upgrade RHEL Family OS packages
+    apt:
+      name: '*'
+      state: latest
+    when: ansible_os_family == "Debian"
+
+  - name: Upgrade RHEL Family OS packages
+    yum:
+      name: '*'
+      state: latest
+    when: ansible_os_family == "RedHat"
+  
+  - name: install python package manager
+    apt:
+      name: 
+        - python3-pip
+
+  - name: Update /etc/hosts
+    become: true
+    blockinfile:
+        path: /etc/hosts
+        create: yes
+        block: |
+          127.0.0.1 localhost
+          10.0.0.10 master.monitoring.lab
+          10.0.0.11 node01.monitoring.lab
+          10.0.0.12 node02.monitoring.lab
+          10.0.0.13 registry.monitoring.lab
+
+  - name: Download Docker Script install
+    get_url: 
+      url: https://get.docker.com 
+      dest: /tmp/docker-installer.sh
+      mode: 'u+rwx'
+    become: true
+
+  - name: execute docker-installer
+    ansible.builtin.shell: /tmp/docker-installer.sh
+    args:
+      executable: /bin/bash
+    become: true
+
+  - name: Enable service Docker 
+    ansible.builtin.systemd:
+      name: docker
+      state: restarted
+      enabled: yes
+    become: true
+  
+  - name: add userpermissions
+    shell: "usermod -aG docker vagrant"
+    become: true
+
+  - name: install python sdk
+    become_user: vagrant
+    pip:
+      name:
+        - docker-compose
+        # - docker
+
+  - name: Reboot host and wait for it to restart
+    reboot:
+      msg: "Reboot initiated by Ansible"
+      connect_timeout: 5
+      reboot_timeout: 600
+      pre_reboot_delay: 0
+      post_reboot_delay: 30
+      test_command: whoami
+...
