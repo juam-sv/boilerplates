@@ -41,3 +41,5 @@ https://docs.oracle.com/en/database/oracle/oracle-database/21/xeinl/installing-o
 https://docs.oracle.com/en/database/oracle/oracle-database/21/xeinl/connecting-oracle-database-xeinl.html
 
 https://docs.oracle.com/en/database/oracle/oracle-database/21/xeinl/starting-and-stopping-oracle-database.html
+
+https://oracle-base.com/articles/19c/oracle-db-19c-installation-on-oracle-linux-8
