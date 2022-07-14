@@ -19,8 +19,8 @@ resource "libvirt_volume" "ubuntu2004-qcow2" {
     # provider = "libvirt"
 }
 
-resource "libvirt_domain" "swarm-lab" {
-    name = "swarm-node-1"
+resource "libvirt_domain" "monitoring" {
+    name = "monitoring_node-1"
     memory = 1024
     vcpu = 2
 
@@ -33,7 +33,7 @@ resource "libvirt_domain" "swarm-lab" {
     cloudinit = libvirt_cloudinit_disk.commoninit.id
 
     network_interface {
-        network_name = "default"
+        network_name = "monitoring"
         # bridge = "br0"
     }
 
@@ -42,7 +42,7 @@ resource "libvirt_domain" "swarm-lab" {
 
 output "IPS" {
     # value = libvirt_domain.terraform_test.ip_addresses
-    value = libvirt_domain.swarm-lab.*.network_interface.0.addresses
+    value = libvirt_domain.monitoring.*.network_interface.0.addresses
 }
 
 resource "libvirt_cloudinit_disk" "commoninit" {
