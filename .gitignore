@@ -2,3 +2,5 @@
 .directory
 *.sql
 *.rpm
+*.img
+*.qcow2
