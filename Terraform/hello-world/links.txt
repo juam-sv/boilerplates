@@ -1,0 +1,5 @@
+https://medium.com/codex/terraform-best-practices-how-to-structure-your-terraform-projects-b5b050eab554
+
+https://itnext.io/how-to-use-terraform-to-create-a-small-scale-cloud-infrastructure-abf54fabc9dd
+
+https://itnext.io/how-to-use-terraform-to-create-a-small-scale-cloud-infrastructure-abf54fabc9dd#ab32
