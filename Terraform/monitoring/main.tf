@@ -13,7 +13,7 @@ provider "libvirt" {
 # resource "libvirt_network" "monitoring-net" {
 #     name = "monitoring-net"
 #     domain = "monitoring.lab.local"
-#     addresses = ["10.0.0.1/24"]
+#     addresses = ["10.0.0.1/24"]f
 #     dhcp {
 #         enable = true
 #     }
