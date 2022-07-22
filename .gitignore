@@ -4,6 +4,7 @@
 *.rpm
 *.img
 *.qcow2
+*.qcow
 
 ## Local .terraform directories
 **/.terraform/*
