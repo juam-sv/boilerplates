@@ -1,0 +1,16 @@
+---
+- hosts: all
+  
+  become: true
+  tasks:
+
+  - name: Update /etc/hosts
+    become: true
+    blockinfile:
+        path: /etc/hosts
+        create: yes
+        block: |
+          127.0.0.1 localhost
+          10.20.30.11 node-1.ansible.lab
+          10.20.30.12 node-2.ansible.lab
+          10.20.30.13 node-3.ansible.lab
