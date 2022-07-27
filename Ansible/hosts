@@ -3,7 +3,7 @@ ansible_user='vagrant'
 ansible_become=yes
 
 [ansible_hosts]
-192.168.122.11
-192.168.122.13
-192.168.122.12
+node-1.ansible.lab
+node-2.ansible.lab
+node-3.ansible.lab
 
