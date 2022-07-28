@@ -20,3 +20,5 @@ ansible -i hosts all -m setup -a "filter=ansible_distribution"
 # playbooks
 ansible-playbook -i hosts first.yaml
 
+#create the roles
+ansible-galaxy init create-instances

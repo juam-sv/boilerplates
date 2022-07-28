@@ -5,8 +5,4 @@ ansible_become=yes
 [ansible_hosts]
 node-1.ansible.lab
 node-2.ansible.lab
-node-3.ansible.lab
-
-[webserver]
-
-[]
+#node-3.ansible.lab
