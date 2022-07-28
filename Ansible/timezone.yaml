@@ -1,8 +1,0 @@
----
-- name: Configure the Timezone
-  hosts: all
-  tasks:
-
-  - name: Set timezone to America/Belem
-    community.general.timezone:
-      name: America/Belem
