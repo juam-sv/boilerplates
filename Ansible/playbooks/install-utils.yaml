@@ -1,0 +1,27 @@
+---
+- name: Playbook to configure IPA clients with username/password
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Install a list of packages
+      apt:
+        update_cache: yes
+        state: present
+        pkg:
+        - wget 
+        - curl 
+        - git 
+        - nano 
+        - vim 
+        - ncdu 
+        - glances 
+        - tcpdump 
+        - htop 
+        - freeipa-client
+      when: ansible_os_family == "Debian"
+
+
+
+

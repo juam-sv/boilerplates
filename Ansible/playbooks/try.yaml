@@ -1,6 +1,7 @@
 - name: Playbook header to try multiple logins
   hosts: all
   gather_facts: no
+  become: yes
   vars:
     usernames:
     - ubuntu
@@ -14,10 +15,10 @@
   - name: Check if connection is possible
     shell: |
       SSHPASS='{{password}}' sshpass -e ssh -o User={{ item }} -o ConnectTimeout=10 -o PubkeyAuthentication=no {{ ansible_host }} /bin/true
-    register: result
-    connection: local
-    ignore_errors: yes
-    changed_when: False
+      register: result
+      connection: local
+      ignore_errors: yes
+      changed_when: False
     with_items: "{{usernames}}"
 
   # - debug:
@@ -25,5 +26,6 @@
 
   - debug:
       msg: "{{ (result.results | rejectattr('failed', 'equalto', true)|first).item}}"
+  #     msg: "{{ (result.results | rejectattr('failed', 'equalto', true)).item}}"
 
 
