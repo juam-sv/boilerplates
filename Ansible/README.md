@@ -17,6 +17,6 @@ ansible -i hosts node-1.ansible.lab -m setup
 ansible -i hosts all -m setup -a "filter=ansible_distribution"
 
 
-
-
+# playbooks
+ansible-playbook -i hosts first.yaml
 
