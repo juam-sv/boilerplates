@@ -1,2 +1,8 @@
 ---
 # vars file for create-instances
+instance_type: t2.medium
+image: id-imagem
+keypair: ansible-class
+region: eu-central-1
+count: 3
+profile: giropops
