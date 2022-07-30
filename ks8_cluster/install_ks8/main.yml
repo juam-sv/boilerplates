@@ -1,0 +1,24 @@
+- hosts: all
+  become: yes
+  user: ubuntu
+  gather_facts: no
+  pre_tasks:
+  - name: 'Atualizando reposit.'
+    raw: apt-get update -y
+  -name: 'Install python'
+    raw: 'apt-get install -y python'
+  roles:
+  - { roles: install-ks8, tags: ["install_ks8_role"] }    
+
+
+- hosts: ks8-master
+  become: yes
+  user: ubuntu
+  roles: 
+    - { role: create-cluster, tags: ["create_cluster_role"] }
+  
+- hosts: ks8-workers
+  become: yes
+  user: ubuntu
+  roles: 
+  - { role: join-workers, tags: ["join_workers_role"] }

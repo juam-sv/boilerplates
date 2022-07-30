@@ -1,0 +1,9 @@
+[ks8-masters]
+
+
+[ks8-workers]
+
+
+[ks8-workers:vars]
+KS8_MASTER_NODE=
+KS8_API_SECURE_PORT=6443
