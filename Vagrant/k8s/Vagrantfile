@@ -4,38 +4,44 @@
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
-  (1..2).each do |i|                            #change the number for que nº of VMs you want. ex: (1..5)
-    config.vm.define "node-#{i}" do |node|      #define the vm name 
-      node.vm.box = "generic/ubuntu2004"        #VM Image used
-      node.vm.hostname = "node-#{i}"            #set the vm hostname
-      node.vm.network :private_network,         #create a new private network
-        :libvirt__network_name => "default",    #select the libvirt network
-        :libvirt__always_destroy => false       #for not exclude the network when execute vagrant destroy 
-      node.vm.provider :libvirt do |libvirt|    #provider configuration, for libvirt/qemu things
-        libvirt.cpus = 2                        # number of vCPUs
-        libvirt.memory = 2048                   #ram memory
-        libvirt.default_prefix = "k8s"
+  (1..2).each do |i|
+    config.vm.define "worker-node-#{i}" do |k8s|
+      k8s.vm.box = "generic/ubuntu2204"
+      k8s.vm.hostname = "worker-node-#{i}"
+      k8s.vm.synced_folder ".", "/vagrant_data", disabled: true
+      k8s.vm.network :private_network,         
+        :libvirt__network_name => "k8s",    
+        :libvirt__always_destroy => false,
+        :ip => "10.0.0.2#{i}"
+      k8s.vm.provider :libvirt do |libvirt|
+        libvirt.cpus = 2
+        libvirt.memory = 2084
+        libvirt.default_prefix = "k8s_"
         libvirt.nested = true
       end
-
-      #Add of my pub ssh key to autorized keys inside VM.
-      config.vm.provision "shell" do |s|
-        ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_ed25519.pub").first.strip #get your ssh pub key
-        # ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip #get your ssh pub key
-        s.inline = <<-SHELL
-        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
-        #echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
-        SHELL
-      end
-
-      # Vagrant.configure("2") do |config|  
-      #   config.vm.provision "shell", path: "ks8_install.sh"
+      k8s.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+      # k8s.vm.provision :ansible do |ansible|
+      #   ansible.playbook = "./provision/main.yaml"
       # end
-
-      #Update the system, install docker and enable run docker whitout root
-      config.vm.provision "shell", inline: <<-SHELL
-
-      SHELL
     end
   end
+  (1..1).each do |i|
+    config.vm.define "master-node-#{i}" do |k8s|
+      k8s.vm.box = "generic/ubuntu2204"
+      k8s.vm.hostname = "master-node-#{i}"
+      k8s.vm.synced_folder ".", "/vagrant_data", disabled: true
+      k8s.vm.network :private_network,         
+        :libvirt__network_name => "k8s",    
+        :libvirt__always_destroy => false,
+        :ip => "10.0.0.1#{i}"
+      k8s.vm.provider :libvirt do |libvirt|
+        libvirt.cpus = 2
+        libvirt.memory = 2084
+        libvirt.default_prefix = "k8s_"
+        libvirt.nested = true
+      end
+      k8s.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+    end
+  end
+
 end
