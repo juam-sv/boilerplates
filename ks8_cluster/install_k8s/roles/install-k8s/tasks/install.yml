@@ -8,7 +8,7 @@
   
 - name: Adicionando repo do k8s
   apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
 
 - name: instalando os packages kubeadm, kubelet e kubectl
