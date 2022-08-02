@@ -2,13 +2,13 @@
 ansible_user='vagrant'
 ansible_become=yes
 
-[ks8-masters]
+[k8s-masters]
 10.0.0.11
 
-[ks8-workers]
+[k8s-workers]
 10.0.0.21
 10.0.0.22
 
-[ks8-workers:vars]
+[k8s-workers:vars]
 KS8_MASTER_NODE_IP=
 KS8_API_SECURE_PORT=6443

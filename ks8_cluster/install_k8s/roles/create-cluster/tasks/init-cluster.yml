@@ -17,7 +17,7 @@
   file: 
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/config
-  state: link
+    state: link
 
 - name: Configurando weavenet
   shell: kubectl apply -f {{ default_url_weavenet}}

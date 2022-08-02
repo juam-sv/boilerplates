@@ -16,9 +16,15 @@ ansible -i hosts node-1.ansible.lab -m setup
 
 ansible -i hosts all -m setup -a "filter=ansible_distribution"
 
-
 # playbooks
 ansible-playbook -i hosts first.yaml
 
 #create the roles
 ansible-galaxy init create-instances
+
+#ignore key checking
+#1 - put it on /etc/ansible.cfg or on ~/.ansible.cfg
+[defaults]
+host_key_checking = False
+
+#enviroment export ANSIBLE_HOST_KEY_CHECKING=False

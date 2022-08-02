@@ -5,11 +5,10 @@
   pre_tasks:
   - name: 'Atualizando reposit.'
     raw: apt-get update -y
-  -name: 'Install python'
-    raw: 'apt-get install -y python'
+  - name: 'Install python'
+    raw: 'apt-get install -y python3'
   roles:
-  - { roles: install-ks8, tags: ["install_ks8_role"] }    
-
+  - { role: install-k8s, tags: ["install_ks8_role"] }    
 
 - hosts: ks8-master
   become: yes
