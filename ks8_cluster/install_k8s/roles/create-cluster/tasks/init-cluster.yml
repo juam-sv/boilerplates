@@ -1,23 +1,36 @@
 - name: Resetando cluster
-  command: 
+  command:
     kubeadm reset --force
-  register: kubeadm_init
+  register: kubeadm_reset
 
 - name: Iniciando o cluster
   command: 
     kubeadm init
   register: kubeadm_init
 
+#### VERIFICAR NOVAMENTE
 - name: Criando o diretorio .kube
   file:
-    path: ~/.kube
+    path: "/home/{{ user }}/.kube"
     state: directory
 
-- name: Criando symbolic link do admin.conf do ks8
-  file: 
+- name: copy config
+  copy:
     src: /etc/kubernetes/admin.conf
-    dest: ~/.kube/config
-    state: link
+    dest:  "/home/{{ user }}/.kube/config"
+    remote_src: yes
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: yes
+  become_user: root
+
+# - name: Criando symbolic link do admin.conf do ks8
+#   file:
+#     src: /etc/kubernetes/admin.conf
+#     dest: /home/vagrant/.kube/config
+#     state: link
+
+############
 
 - name: Configurando weavenet
   shell: kubectl apply -f {{ default_url_weavenet }}
@@ -25,7 +38,7 @@
 
 - name: Get Token for workers
   shell: kubeadm token list | cut -d ' ' -f1 | sed -n '2p'
-  register: k8s_tokens
+  register: k8s_token
 
 - name: CA hash
   shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'

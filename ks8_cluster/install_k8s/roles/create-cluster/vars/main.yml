@@ -1,4 +1,6 @@
 ---
 # vars file for create-cluster
-default_url_weavenet: "https://cloud.weave.works/k8s/net?k8s-version=v1.24.3"
-# default_url_weavenet: "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+# default_url_weavenet: "https://cloud.weave.works/k8s/net?k8s-version=v1.24.3"
+default_url_weavenet: "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+# default_url_weavenet: "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version -oyaml --client|awk '/gitVersion/{print $2;}')"
+user: "vagrant"

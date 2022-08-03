@@ -19,3 +19,13 @@
     - kubelet
     - kubeadm
     - kubectl
+
+- name: Removing config.toml
+  file: 
+    path: /etc/containerd/config.toml
+    state: absent
+
+- name: Make sure a service unit is running
+  systemd:
+    state: restarted
+    name: containerd
