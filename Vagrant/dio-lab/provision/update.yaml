@@ -1,0 +1,33 @@
+---
+- hosts: all
+  
+  become: yes
+  # become_user: 
+  tasks:
+
+  - name: Atualizacao de Sistema
+    apt: 
+      name: "*"
+      state: latest
+
+  - name: Instalando o apache2 and unzip
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - apache2
+      - unzip
+
+  - name: Baixando e extraindo o arquivo estatico do Site
+    unarchive:
+      src: https://github.com/denilsonbonatti/linux-site-dio/archive/refs/heads/main.zip 
+      dest: /var/www/html/
+      remote_src: yes
+
+  - name: Finalizando processo
+    debug:
+      msg: 
+      - "Site acessivel em '{{ ansible_default_ipv4.address }}'/linux-site-dio-main"
+    
+

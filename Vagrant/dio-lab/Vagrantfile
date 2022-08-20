@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+    config.vm.define "diolab" do |diolab|
+        diolab.vm.box = "generic/ubuntu2004"
+        diolab.vm.hostname = "diolab"
+        diolab.vm.provider :libvirt do |libvirt|
+            libvirt.cpus = 4
+            libvirt.memory = 4096
+            libvirt.default_prefix = ""
+        end
+
+        diolab.ssh.insert_key = false
+        diolab.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+
+        diolab.vm.provision :ansible do |ansible|
+            ansible.playbook = "./provision/main.yaml"
+        end
+    end
+end
