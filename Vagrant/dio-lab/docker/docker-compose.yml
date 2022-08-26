@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  nginx:
+    image: nginx-tunado
+    ports:
+      - 80:80
+    volumes:
+      - nginx:/var/jenkins_home
+  mysql:
+    image: mysql
+    # ports:
+    #   - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+volumes:
+  nginx:
+  mysql:
