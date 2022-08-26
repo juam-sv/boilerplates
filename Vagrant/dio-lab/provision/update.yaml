@@ -28,6 +28,5 @@
   - name: Finalizando processo
     debug:
       msg: 
-      - "Site acessivel em '{{ ansible_default_ipv4.address }}'/linux-site-dio-main"
+      - "Site acessivel em {{ ansible_default_ipv4.address }}/linux-site-dio-main"
     
-
