@@ -4,8 +4,6 @@ services:
     image: nginx-tunado
     ports:
       - 80:80
-    volumes:
-      - nginx:/var/jenkins_home
   mysql:
     image: mysql
     # ports:
