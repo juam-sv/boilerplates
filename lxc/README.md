@@ -6,3 +6,6 @@ lxc list -c n,s,4,image.description:image
 
 # List ubuntu images
 lxc image alias list ubuntu: '20.04'
+
+chmod u+s /usr/bin/newuidmap
+chmod u+s /usr/bin/newgidmap
