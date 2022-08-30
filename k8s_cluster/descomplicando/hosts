@@ -1,8 +1,0 @@
-[ansible_hosts:vars]
-ansible_user='vagrant'
-ansible_become=yes
-
-[ansible_hosts]
-node-1.ansible.lab
-node-2.ansible.lab
-#node-3.ansible.lab

@@ -36,6 +36,10 @@
 #   shell: kubectl apply -f {{ default_url_weavenet }}
 #   register: weavenet_result
 
+- name: Configurando calico
+  shell: kubectl apply -f {{ default_url_calico }}
+  register: calico_result
+
 - name: Get Token for workers
   shell: kubeadm token list | cut -d ' ' -f1  | sed -n '2p'
   register: k8s_token
