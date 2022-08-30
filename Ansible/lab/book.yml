@@ -1,0 +1,14 @@
+---
+- name: Lab
+  hosts: all
+  become: True
+  vars_prompt:
+    - name: your_name
+      prompt: "What is your name?"
+
+  tasks:
+    - stat: path=/etc/hosts
+      register: host_info
+    - set_fact: example_var="{{host_info.stat.path|upper}}"
+    - debug: var=example_var
+    - debug: msg="Hello {{your_name}}"

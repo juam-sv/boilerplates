@@ -1,0 +1,21 @@
+---
+- name: Lab
+  hosts: all
+  become: True
+
+  tasks:
+    - name: Get home directory /home/vagrant contents
+      shell: ls -a /home/vagrant
+      register: dir_contents
+
+    - name: Create a new directory /tmp/vagrant
+      file:
+        path: /tmp/vagrant
+        state: directory
+
+    - name: Backup home directory /home/vagrant to /tmp/vagrant
+      copy:
+        src: /home/vagrant/{{ item }}
+        dest: /tmp/vagrant/
+        remote_src: True
+      loop: "{{ dir_contents.stdout_lines }}"

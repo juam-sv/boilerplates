@@ -1,0 +1,14 @@
+---
+- name: Lab
+  hosts: all
+  become: True
+
+  tasks:
+    - name: List directory contents
+      shell: ls /home/vagrant/test
+      register: dir_contents
+
+    - name: Check if directory is empty
+      debug:
+        msg: "Directory is empty."
+      when: dir_contents.stdout == ""

@@ -1,0 +1,12 @@
+---
+- name: Lab
+  hosts: all
+  become: True
+  tasks:
+    - block:
+      - command: /bin/true
+      - debug: msg="I will never run as the task above fails"
+      rescue:
+        - debug: msg="This will run because the block failed"
+      always:
+        - debug: msg="This runs no matter what happens"
