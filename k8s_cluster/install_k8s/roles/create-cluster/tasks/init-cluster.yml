@@ -32,12 +32,12 @@
 
 ############
 
-- name: Configurando weavenet
-  shell: kubectl apply -f {{ default_url_weavenet }}
-  register: weavenet_result
+# - name: Configurando weavenet
+#   shell: kubectl apply -f {{ default_url_weavenet }}
+#   register: weavenet_result
 
 - name: Get Token for workers
-  shell: kubeadm token list | cut -d ' ' -f1 | sed -n '2p'
+  shell: kubeadm token list | cut -d ' ' -f1  | sed -n '2p'
   register: k8s_token
 
 - name: CA hash

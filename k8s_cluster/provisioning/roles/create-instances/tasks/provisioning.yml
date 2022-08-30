@@ -59,15 +59,3 @@
   args:
     tags:
       name: ansible-{{ item.ami_launch_index|int + 1}}
-
-
-
-
-
-
-
-
-
-
-
-
