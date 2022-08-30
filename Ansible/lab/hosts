@@ -1,0 +1,6 @@
+[all:vars]
+ansible_user='vagrant'
+ansible_become=yes
+
+10.0.0.11
+@REM 10.0.0.21

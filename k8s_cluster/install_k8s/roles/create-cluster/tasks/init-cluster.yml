@@ -1,64 +1,65 @@
-- name: Resetando cluster
-  command:
-    kubeadm reset --force
-  register: kubeadm_reset
+# - name: Resetando cluster
+#   command:
+#     kubeadm reset --force
+#   become: yes
+#   become_user: root
+#   register: kubeadm_reset
 
-- name: Iniciando o cluster
-  command: 
-    kubeadm init
-  register: kubeadm_init
+# - name: Iniciando o cluster
+#   command: 
+#     kubeadm init
+#   register: kubeadm_init
 
-#### VERIFICAR NOVAMENTE
-- name: Criando o diretorio .kube
-  file:
-    path: "/home/{{ user }}/.kube"
-    state: directory
-
-- name: copy config
-  copy:
-    src: /etc/kubernetes/admin.conf
-    dest:  "/home/{{ user }}/.kube/config"
-    remote_src: yes
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  become: yes
-  become_user: root
-
-# - name: Criando symbolic link do admin.conf do ks8
+# #### VERIFICAR NOVAMENTE
+# - name: Criando o diretorio .kube
 #   file:
+#     path: "/home/{{ user }}/.kube"
+#     state: directory
+
+# - name: copy config
+#   copy:
 #     src: /etc/kubernetes/admin.conf
-#     dest: /home/vagrant/.kube/config
-#     state: link
+#     dest:  "/home/{{ user }}/.kube/config"
+#     remote_src: yes
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
+#   become: yes
+#   become_user: root
 
 ############
 
-# - name: Configurando weavenet
-#   shell: kubectl apply -f {{ default_url_weavenet }}
-#   register: weavenet_result
-
-- name: Configurando calico
-  shell: kubectl apply -f {{ default_url_calico }}
-  register: calico_result
-
-- name: Get Token for workers
-  shell: kubeadm token list | cut -d ' ' -f1  | sed -n '2p'
-  register: k8s_token
-
-- name: CA hash
-  shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
-  register: k8s_master_ca_hash
-
-- name: Adicionando o token e o hash em um dummy host
-  add_host:
-    name: "K8S_TOKEN_HOLDER"
-    token: "{{ k8s_token.stdout }}"
-    hash: "{{ k8s_master_ca_hash.stdout }}"
-
-- name: 
+- name: Configurando weavenet
+  shell: kubectl apply -f "{{ default_url_weavenet }}"
+  register: weavenet_result
+  # become: yes
+  # become_user: root
+- name: debug
   debug:
-    msg: "[MASTER] K8S_TOKEN_HOLDER - O token é {{ hostvars['K8S_TOKEN_HOLDER']['token'] }}"
+    var: weavenet_result.stdout
 
-- name: 
-  debug:
-    msg: "[MASTER] K8S_TOKEN_HOLDER - O hash é {{ hostvars['K8S_TOKEN_HOLDER']['hash'] }}"
+# # - name: Configurando calico
+# #   shell: kubectl apply -f {{ default_url_calico }}
+# #   register: calico_result
+
+# - name: Get Token for workers
+#   shell: kubeadm token list | cut -d ' ' -f1  | sed -n '2p'
+#   register: k8s_token
+
+# - name: CA hash
+#   shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+#   register: k8s_master_ca_hash
+
+# - name: Adicionando o token e o hash em um dummy host
+#   add_host:
+#     name: "K8S_TOKEN_HOLDER"
+#     token: "{{ k8s_token.stdout }}"
+#     hash: "{{ k8s_master_ca_hash.stdout }}"
+
+# - name: 
+#   debug:
+#     msg: "[MASTER] K8S_TOKEN_HOLDER - O token é {{ hostvars['K8S_TOKEN_HOLDER']['token'] }}"
+
+# - name: 
+#   debug:
+#     msg: "[MASTER] K8S_TOKEN_HOLDER - O hash é {{ hostvars['K8S_TOKEN_HOLDER']['hash'] }}"
 
