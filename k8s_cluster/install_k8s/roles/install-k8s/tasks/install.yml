@@ -25,6 +25,15 @@
     path: /etc/containerd/config.toml
     state: absent
 
+- name: Disable swappiness and pass bridged IPv4 traffic to iptable's chains
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: 'vm.swappiness', value: '0' }
+    - { name: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+
 - name: Make sure a service unit is running
   systemd:
     state: restarted

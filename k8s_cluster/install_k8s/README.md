@@ -28,3 +28,8 @@ ansible-galaxy init create-instances
 host_key_checking = False
 
 #enviroment export ANSIBLE_HOST_KEY_CHECKING=False
+
+# NOTES
+mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
