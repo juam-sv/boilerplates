@@ -31,9 +31,11 @@ host_key_checking = False
 
 # NOTES
 mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ansible-playbook -i hosts main.yml --tags "install_helm3_role,install_monit_tools.yml" --list-tasks
 
 chmod go-r ~/.kube/config
+
+kubectl --namespace default get pods -l "release=prometheus"

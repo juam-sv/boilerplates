@@ -31,6 +31,7 @@
 - name: Configurando weavenet
   shell: kubectl apply -f "{{ default_url_weavenet }}"
   register: weavenet_result
+  ignore_errors: true
   # become: yes
   # become_user: root
 
