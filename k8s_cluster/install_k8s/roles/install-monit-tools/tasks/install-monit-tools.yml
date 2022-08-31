@@ -1,5 +1,5 @@
 - name: helm add repo
-  shell: helm repo add bitnami {{ url_repo_helm }}
+  shell: helm repo add prometheus-community {{ url_repo_helm }}
   register: prometheus_add_repo
 
 - name: helm update

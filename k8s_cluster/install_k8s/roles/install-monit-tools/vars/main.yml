@@ -1,5 +1,5 @@
 ---
 # vars file for install-monit-tools
 # url_repo_helm: https://kubernetes-charts.storage.googleapis.com
-url_repo_helm: https://charts.bitnami.com/bitnami
-deploy_prometheus: "meu-querido-prometheus bitnami/kube-prometheus"
+url_repo_helm: https://prometheus-community.github.io/helm-charts
+deploy_prometheus: "prometheus prometheus-community/kube-prometheus-stack"
