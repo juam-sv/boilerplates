@@ -28,3 +28,4 @@ These are my templates and configurations I use in some projects, deployment and
 * [Vagrant](https://github.com/juam-sv/boilerplate/tree/main/Vagrant) - a tool for create, package and deploy VMs.
 * [Docker](https://github.com/juam-sv/boilerplate/tree/main/docker-compose) - A tool for creation and management of containers and services running on it.
 * [Ansible]() [ON DEVELOPMENT]
+* [Packer](https://github.com/juam-sv/boilerplate/tree/main/Packer) - A tool for building "images" or boxes with systems across multiples clouds.
