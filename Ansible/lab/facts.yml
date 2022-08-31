@@ -1,15 +1,15 @@
 ---
-- name: Lab
-  hosts: all
-  become: True
+    - name: Lab
+    hosts: all
+    become: True
 
-  tasks:
+    tasks:
     # display the variable data type
     - debug:
         msg: 
-          - " Data type of 'ansible_architecture'  is {{ ansible_architecture | type_debug }} "
-          - " Data type of 'ansible_apparmor' is {{ ansible_apparmor | type_debug }} "
-          - " Data type of 'ansible_all_ipv4_addresses' is {{ ansible_all_ipv4_addresses | type_debug }} "
+        - " Data type of 'ansible_architecture'  is {{ ansible_architecture | type_debug }} "
+        - " Data type of 'ansible_apparmor' is {{ ansible_apparmor | type_debug }} "
+        - " Data type of 'ansible_all_ipv4_addresses' is {{ ansible_all_ipv4_addresses | type_debug }} "
 
     # Simply printing the value of fact which is Ansible UnSafe Text type
     - debug:
@@ -29,10 +29,10 @@
 
     # - debug:
         # msg:
-          # - "Discos da maquina 'ansible_devices' is {{ ansible_devices.vda.partitions.vda3.size }} type {{ ansible_devices | type_debug}}"
-          # - "nodename 'ansible_nodename' is {{ ansible_nodename }} type {{ ansible_nodename | type_debug}}"
-          # - "Memory 'ansible_memtotal_mb' is {{ '{:0.2f}'.format(ansible_memtotal_mb/1024) }}GB of RAM type: {{ ansible_memtotal_mb | type_debug}}"
-      
+        # - "Discos da maquina 'ansible_devices' is {{ ansible_devices.vda.partitions.vda3.size }} type {{ ansible_devices | type_debug}}"
+        - "nodename 'ansible_nodename' is {{ ansible_nodename }} type {{ ansible_nodename | type_debug}}"
+        - "Memory 'ansible_memtotal_mb' is {{ '{:0.2f}'.format(ansible_memtotal_mb/1024) }}GB of RAM type: {{ ansible_memtotal_mb | type_debug}}"
+    
     - debug:
         msg: "partitions: {{ item.size }} "
-      loop: "{{ ansible_devices.vda.partitions }}"
+    loop: "{{ ansible_devices.vda.partitions }}"

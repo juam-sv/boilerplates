@@ -4,11 +4,11 @@
   become: True
 
   tasks:
-    # - name: Ensure pwgen is installed
-    #   apt:
-    #     name: pwgen
-    #     state: present
-    #     update_cache: True
+    - name: Ensure pwgen is installed
+      apt:
+        name: pwgen
+        state: present
+        update_cache: True
         
     - name: Generate password
       shell: pwgen -N 1 -s 30
@@ -22,10 +22,10 @@
       shell: ls -a /home/vagrant
       register: dir_contents
 
-    # - name: Print directory contents using loops
-    #   debug:
-    #     msg: "{{ item }}"
-    #   loop: "{{ dir_contents.stdout_lines }}"
+    - name: Print directory contents using loops
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ dir_contents.stdout_lines }}"
 
     - name: Print dir_contents
       debug:
