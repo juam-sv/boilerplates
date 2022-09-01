@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+NODES = 3
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "generic/ubuntu2004"
+
+    (1..NODES).each do |i|
+        config.vm.define "pgnode0#{i}" do |pg|
+            pg.vm.hostname = "pgnode0#{i}"
+            pg.vm.network "private_network", ip: "20.0.0.10#{i}"
+            # pg.vm.network :private_network,         
+            #     :libvirt__network_name => "postgres-ha",    
+            #     # :libvirt__always_destroy => true,
+            #     :ip => "10.0.0.10#{i}"
+            pg.ssh.insert_key = false
+            pg.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+        end
+
+        config.vm.provider :libvirt do |libvirt|
+            libvirt.cpus = 2
+            libvirt.memory = 2084
+            libvirt.default_prefix = ""
+        end
+    end
+end
