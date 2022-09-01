@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+WORKERS = 1
+MASTERS = 1
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/ubuntu2004"
+
+  (1..WORKERS).each do |i|
+    config.vm.define "worker-node-#{i}" do |k8s|
+      k8s.vm.hostname = "worker-node-#{i}"
+      k8s.vm.network :private_network,         
+        :libvirt__network_name => "k8s",    
+        :libvirt__always_destroy => false,
+        :ip => "10.0.0.2#{i}"
+    end
+  end
+
+  (1..MASTERS).each do |i|
+    config.vm.define "master-node-#{i}" do |k8s|
+      k8s.vm.hostname = "master-node-#{i}"
+      k8s.vm.network :private_network,         
+        :libvirt__network_name => "k8s",
+        :libvirt__always_destroy => false,
+        :ip => "10.0.0.1#{i}"
+    end
+  end
+
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 2
+      libvirt.memory = 2084
+      libvirt.default_prefix = "k8s_"
+  end
+
+  config.vm.provision "shell" do |s|
+    ssh_pub_key = File.readlines("/home/juamsv/.ssh/id_rsa.pub").first.strip
+    s.inline = <<-SHELL
+    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+end

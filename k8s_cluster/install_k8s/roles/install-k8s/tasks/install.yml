@@ -34,7 +34,7 @@
     - { name: 'vm.swappiness', value: '0' }
     - { name: 'net.bridge.bridge-nf-call-iptables', value: '1' }
 
-- name: Make sure a service unit is running
+- name: Confirmar que o servico esta rodando
   systemd:
     state: restarted
     name: containerd

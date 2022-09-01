@@ -1,2 +1,3 @@
 ---
 # vars file for join-workers
+# K8S_TOKEN_HOLDER: 10.0.0.11

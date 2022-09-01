@@ -1,0 +1,8 @@
+---
+- hosts: k8s-masters
+  become: yes
+  user: vagrant
+  collections:
+    - kubernetes.core
+  roles:
+  - { role: deploy-app, tags: ["deploy_app_role"]  }

@@ -7,5 +7,5 @@
   register: prrometheus_repo_update
 
 - name: Instalando o Prometheus Operator
-  shell: helm install {{ deploy_prometheus }}
+  shell: helm install prometheus prometheus-community/kube-prometheus-stack
   register: prometheus_install

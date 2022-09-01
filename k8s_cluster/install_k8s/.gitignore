@@ -1,0 +1,8 @@
+/.ssh 
+/.vagrant
+.vagrant
+.directory
+/.directory
+*.gz
+*.zip
+*.sql
