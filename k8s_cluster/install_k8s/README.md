@@ -39,3 +39,14 @@ ansible-playbook -i hosts main.yml --tags "install_helm3_role,install_monit_tool
 chmod go-r ~/.kube/config
 
 kubectl --namespace default get pods -l "release=prometheus"
+
+
+####
+awx 
+update
+curl -fsSL https://get.docker.com | bash
+install ansible, pip, 
+add user to docker group
+pip install docker-compose docker-py
+apt install npm nodejs
+npm install npm --global
