@@ -1,11 +1,13 @@
 [all:vars]
 ansible_user='vagrant'
 ansible_become=yes
-K8S_MASTER_NODE_IP=192.168.121.57
+private_key_file=~/.ssh/id_rsa
+K8S_MASTER_NODE_IP=192.168.121.189
 K8S_API_SECURE_PORT=6443
 
 [k8s-masters]
-10.0.0.11
+master
 
 [k8s-workers]
-10.0.0.21
+node-01
+node-02
