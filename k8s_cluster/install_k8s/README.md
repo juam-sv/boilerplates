@@ -50,3 +50,5 @@ add user to docker group
 pip install docker-compose docker-py
 apt install npm nodejs
 npm install npm --global
+
+openssl rand -hex 32
