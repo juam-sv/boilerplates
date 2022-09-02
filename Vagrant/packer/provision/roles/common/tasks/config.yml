@@ -1,0 +1,45 @@
+---
+# defaults file for roles/common
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install a list of packages
+  apt:
+    update_cache: yes
+    state: present
+    pkg:
+    - wget 
+    - curl 
+    - git 
+    - nano 
+    - vim 
+    - ncdu 
+    - glances 
+    - tcpdump 
+    - htop 
+    - unzip
+    - nmap
+
+- name: Add the user "{{ user }}" and change group
+  ansible.builtin.user:
+    name: "{{ user }}"
+    comment: "{{ user }} User"
+    shell: /bin/bash
+    groups: sudo, adm 
+    append: yes
+
+- name: Allow the "{{ user }}" user to run any commands 
+  community.general.sudoers:
+    name: "{{ user }}"
+    state: present
+    user: "{{ user }}"
+    commands: ALL
+
+- name: Set authorized key for user {{ user }} copying it from current user
+  ansible.posix.authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
