@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+    config.vm.define "packer" do |packer|
+        packer.vm.box = "generic/ubuntu2004"
+        packer.vm.hostname = "packer"
+        packer.vm.provider :libvirt do |libvirt|
+            libvirt.cpus = 4
+            libvirt.memory = 4096
+            libvirt.default_prefix = ""
+        end
+
+        packer.ssh.insert_key = false
+        packer.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+
+        packer.vm.provision :ansible do |ansible|
+            ansible.playbook = "./provision/main.yaml"
+        end
+    end
+end
