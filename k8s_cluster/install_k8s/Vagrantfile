@@ -1,55 +1,35 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-WORKERS = 1
-MASTERS = 1
+# Settings for the Vagrantfile
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
+cluster = {
+  "master"    => {"memory" => "2048", "cpu" => "2", "ip" => "100", "image" => "generic/ubuntu2004"},
+  "node-01"   => {"memory" => "1024", "cpu" => "2", "ip" => "110", "image" => "generic/ubuntu2004"},
+  "node-02"   => {"memory" => "1024", "cpu" => "2", "ip" => "120", "image" => "generic/ubuntu2004"},
+  "awx"       => {"memory" => "4094", "cpu" => "4", "ip" => "130", "image" => "generic/ubuntu2004"}
+  # "registry" => {"memory" => "2048", "cpu" => "2", "ip" => "200", "image" => "generic/ubuntu1804"}
+}
+
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "generic/ubuntu2004"
-
-  (1..WORKERS).each do |i|
-    config.vm.define "worker-node-#{i}" do |k8s|
-      k8s.vm.hostname = "worker-node-#{i}"
-      k8s.vm.network :private_network,         
-        :libvirt__network_name => "k8s",    
+  cluster.each do |name, conf|
+    config.vm.define "#{name}" do |cluster|
+      cluster.vm.box = "#{conf["image"]}"
+      cluster.vm.hostname = "#{name}.k8s.lab"
+      cluster.vm.network :private_network,         
+        :libvirt__network_name => "cluster_k8s",    
         :libvirt__always_destroy => false,
-        :ip => "10.0.0.2#{i}"
+        :ip => "10.10.10.#{conf["ip"]}"
+      cluster.vm.provider :libvirt do |libvirt|
+        libvirt.default_prefix = ""
+        libvirt.memory = conf["memory"]
+        libvirt.cpus = conf["cpu"]
+      end
+      cluster.ssh.insert_key = false
+      cluster.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
     end
-  end
-
-  (1..MASTERS).each do |i|
-    config.vm.define "master-node-#{i}" do |k8s|
-      k8s.vm.hostname = "master-node-#{i}"
-      k8s.vm.network :private_network,         
-        :libvirt__network_name => "k8s",
-        :libvirt__always_destroy => false,
-        :ip => "10.0.0.1#{i}"
-    end
-  end
-
-  (1..1).each do |i|
-    config.vm.define "awx-node-#{i}" do |awx|
-      awx.vm.hostname = "awx-node-#{i}"
-      awx.vm.network :private_network,         
-        :libvirt__network_name => "k8s",
-        :libvirt__always_destroy => false,
-        :ip => "10.0.0.3#{i}"
-    end
-  end
-
-  config.vm.provider :libvirt do |libvirt|
-    libvirt.cpus = 2
-      libvirt.memory = 2084
-      libvirt.default_prefix = "k8s_"
-  end
-
-  config.vm.provision "shell" do |s|
-    ssh_pub_key = File.readlines("/home/juamsv/.ssh/id_rsa.pub").first.strip
-    s.inline = <<-SHELL
-    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
-    SHELL
   end
 end
