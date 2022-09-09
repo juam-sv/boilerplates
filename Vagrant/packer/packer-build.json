@@ -1,52 +1,25 @@
+
 {
-  "variables": {
-      "aws_access_key": "",
-      "aws_secret_key": "",
-      "ami_name": "tomcat-ami",
-      "aws_region": "us-east-1",
-      "ssh_username": "centos",
-      "vpc_id": "",
-      "subnet_id": ""
-  },
-  "builders": [{
-      "type": "amazon-ebs",
-      "access_key": "{{user `aws_access_key`}}",
-      "secret_key": "{{user `aws_secret_key`}}",
-      "region": "{{user `aws_region`}}",
-      "instance_type": "t2.micro",
-      "force_deregister": "true",
-      "ssh_username": "{{user `ssh_username`}}",
-      "communicator": "ssh",
-      "associate_public_ip_address": true,
-      "subnet_id": "{{user `subnet_id`}}",
-      "ami_name": "{{user `ami_name`}}",
-      "source_ami_filter": {
-          "filters": {
-              "virtualization-type": "hvm",
-              "name": "CentOS Linux 7 x86_64 HVM EBS *",
-              "root-device-type": "ebs"
-          },
-          "owners": ["679593333241"],
-          "most_recent": true
-      },
-      "run_tags": {
-          "Name": "packer-build-image"
-      }
-  }],
-  "provisioners": [{
-          "type": "shell",
-          "inline": "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done"
-      },
-      {
-          "type": "shell",
-          "script": "./provisioners/scripts/bootstrap.sh"
-      },
-      {
-          "type": "ansible",
-          "playbook_file": "./provisioners/ansible/setup-server.yml"
-      },
-      {
-          "type": "ansible",
-          "playbook_file": "./provisioners/ansible/deploy_app.yml"
-      }]
+	"variables": {
+	"aws_access_key": "{env, `aws_access_key`}",
+	"aws_secret_key": "{env, `aws_secret_key`}"
+	},
+	"builders": [{
+		"type": "amazon-ebs",
+		"access_key": "{{user `aws_access_key`}}",
+		"secret_key": "{{user `aws_secret_key`}}",
+		"region": "us-east-1",
+		"source_ami": "ami-0c4f7023847b90238",
+		"instance_type": "t3.micro",
+		"ssh_username": "ubuntu",
+		"ami_name": "base-image-ubuntu",
+    "force_deregister": true,
+    "force_delete_snapshot": true
+    }],
+    "provisioners": [
+        {
+        "type": "ansible",
+        "playbook_file": "./ansible/playbook.yml"
+        }
+    ]    
 }
