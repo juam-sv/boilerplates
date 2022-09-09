@@ -1,13 +1,13 @@
 ---
 # defaults file for roles/common
 - name: Update all packages to their latest version
-  apt:
+  ansible.builtin.apt:
     name: "*"
     state: latest
     update_cache: yes
 
 - name: Install a list of packages
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
     state: present
     pkg:
