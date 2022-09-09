@@ -14,6 +14,8 @@ ansible -i hosts node-1.ansible.lab -m git -a "repo=linkdorepo/new_folder dest=/
 #get facts/information sobre o host
 ansible -i hosts node-1.ansible.lab -m setup
 
+ansible all -i 192.168.121.179, --user "vagrant" -m setup
+
 ansible -i hosts all -m setup -a "filter=ansible_distribution"
 
 # playbooks
