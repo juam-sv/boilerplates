@@ -1,0 +1,29 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Configure webserver with nginx
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Ensure nginx is installed
+      package:
+        name: nginx
+        update_cache: true
+
+    - name: Manage nginx config file
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/default
+        mode: 0644
+
+    - name: Copy home page template
+      template:
+        src: index.html.j2
+        dest: /usr/share/nginx/html/index.html
+        mode: 0644
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+...
