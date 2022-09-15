@@ -4,4 +4,3 @@
   # become: yes
   roles:
   - { role: common, tags: pre_tasks}
-  - { role: z-tests, tags: test}

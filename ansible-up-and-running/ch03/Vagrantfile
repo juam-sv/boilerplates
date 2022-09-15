@@ -21,9 +21,9 @@ Vagrant.configure("2") do |config|
                 ansible.tags = "pre_tasks"
                 ansible.verbose = "vvv"
             end
-            ansible.vm.provision "docker" do |d|
-                d.run "nginx"
-            end
+            # ansible.vm.provision "docker" do |d|
+            #     d.run "nginx"
+            # end
         end
     end
 end
