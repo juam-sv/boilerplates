@@ -63,7 +63,7 @@
       delegate_to: localhost
       become: false
       uri:
-        url: 'https://localhost:8443/index.html'
+        url: 'https://localhost/index.html'
         validate_certs: false
         return_content: true
       register: this

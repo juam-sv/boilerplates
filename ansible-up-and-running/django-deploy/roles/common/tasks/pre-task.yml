@@ -1,0 +1,3 @@
+- name: 'Update repo and install python'
+  raw: apt-get update -y && apt-get install -y python3
+  become: yes

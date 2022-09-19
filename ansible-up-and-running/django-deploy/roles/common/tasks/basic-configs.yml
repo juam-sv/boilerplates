@@ -1,0 +1,12 @@
+- name: Updating Packages
+  package:
+    state: latest
+    name: "*"
+  become: yes
+  tags: update
+
+- name: Copy the host pub key to "{{ ansible_env.USER }}" user on client.
+  authorized_key:
+    user: "{{ ansible_env.USER }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
