@@ -13,7 +13,7 @@ variable "name" {
 # ----------- Network Variables -----------
 variable "vnet_name" {
   description ="Name For The Virtual Network"
-  default = "${var.name}-vnet"
+  default = "azure-vnet"
 }
 
 variable "vnet_address_space" {
@@ -23,7 +23,7 @@ variable "vnet_address_space" {
 
 variable "subnet_name" {
   description ="Name For The Subnet"
-  default = "${var.name}-subnet"
+  default = "azure-subnet"
 }
 
 variable "subnet_range" {
@@ -33,13 +33,13 @@ variable "subnet_range" {
 
 variable "net_interface" {
   description ="Name For The Network Interface"
-  default = "${var.name}-nic"
+  default = "azure-nic"
 }
 
 # ----------- VM Variables -----------
 variable "vm_name" {
   description ="Name For The Virtual Machine"
-  default = "${var.name}-vm"
+  default = "azure-vm"
 }
 
 variable "flavor" {
