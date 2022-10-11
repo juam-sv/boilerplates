@@ -6,31 +6,30 @@
 #   account_replication_type = "LRS"
 # }
 
-resource "azurerm_virtual_machine" "vm" {
+resource "azurerm_linux_virtual_machine" "vm_linux" {
   name                  = "${var.prefix}-vm"
-  location              = var.location
-  vm_size               = var.flavor
-  resource_group_name   = azurerm_resource_group.rg.name
-  network_interface_ids = [azurerm_network_interface.nic.id]
+  size               = var.flavor
+  location              = azurerm_resource_group.rg_main.location
+  resource_group_name   = azurerm_resource_group.rg_main.name
   admin_username        = var.username
+  network_interface_ids = [azurerm_network_interface.nic.id]
 
   admin_ssh_key {
     username = var.username
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = file("~/.ssh/azure.pub")
   }
 
-  storage_image_reference {
+  source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
     sku       = "20.04-LTS"
     version   = "latest"
   }
 
-  storage_os_disk {
+  os_disk {
     name              = "${var.prefix}-os_disk"
-    managed_disk_type = "Standard_LRS"
-    caching           = "ReadWrite"
-    # create_option     = "FromImage"
+    storage_account_type = "Standard_LRS"
+    caching              = "ReadWrite"
   }
 
   # os_profile {
@@ -38,9 +37,9 @@ resource "azurerm_virtual_machine" "vm" {
   #   admin_password = var.user_pass
   # }
 
-  os_profile_linux_config {
-    disable_password_authentication = true
-  }
+  # os_profile_linux_config {
+  #   disable_password_authentication = true
+  # }
 
   # boot_diagnostics {
   #   enabled     = true
