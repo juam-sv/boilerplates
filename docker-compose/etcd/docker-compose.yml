@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  etcd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    environment:
+      ETCD_DATA_DIR: "/etcd-data"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://0.0.0.0:2380"
+      ETCD_LISTEN_PEER_URLS: "http://0.0.0.0:2380"
+      ETCD_INITIAL_CLUSTER: "default=http://0.0.0.0:2380"
+      ETCD_INITIAL_CLUSTER_TOKEN: "etcd-cluster"
+      ETCD_INITIAL_CLUSTER_STATE: "new"
+      ETCD_NAME: "default"
+    volumes:
+      - etcd-data:/etcd-data
+
+volumes:
+  etcd-data:
